@@ -7,6 +7,14 @@ class remoteKeyboardClient(object):
 		self.conn = conn
 
 	def on_press(self, key):
+		try:
+			_key = key.char
+		except AttributeError:
+			return None
+
+		if key.char not in list('wasdjkl;'):
+			return None
+
 		self.conn.send(f'{key.char}-p'.encode())
 		status = self.conn.recv(1)
 		if int( status.decode() ) != 1:
@@ -15,6 +23,14 @@ class remoteKeyboardClient(object):
 		print(f'server status on {key}: {int(status.decode())}')
 
 	def on_release(self, key):
+		try:
+			_key = key.char
+		except AttributeError:
+			return None
+
+		if key.char not in list('wasdjkl;'):
+			return None
+
 		self.conn.send(f'{key.char}-r'.encode())
 		status = self.conn.recv(1)
 		if int( status.decode() ) != 1:
